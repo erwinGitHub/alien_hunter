@@ -7,26 +7,36 @@ def keydown_events(event, game_settings, screen, ship, bullets):
     """Keydown events actions"""
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
-    elif event.key == pygame.K_LEFT:
+    
+    if event.key == pygame.K_LEFT:
         ship.moving_left = True
-    elif event.key == pygame.K_UP:
+    
+    if event.key == pygame.K_UP:
         ship.moving_up = True
-    elif event.key == pygame.K_DOWN:
+    
+    if event.key == pygame.K_DOWN:
         ship.moving_down = True
-    elif event.key == pygame.K_SPACE:
+    
+    if event.key == pygame.K_SPACE:
         new_bullet = Bullet(game_settings, screen, ship)
         bullets.add(new_bullet)
+    
+    if event.key == pygame.K_q:
+        sys.exit()    
 
      
 def keyup_events(event, ship):
     """Keyup events actions"""
     if event.key == pygame.K_RIGHT:
         ship.moving_right = False
-    elif event.key == pygame.K_LEFT:
+    
+    if event.key == pygame.K_LEFT:
         ship.moving_left = False
-    elif event.key == pygame.K_UP:
+    
+    if event.key == pygame.K_UP:
         ship.moving_up = False
-    elif event.key == pygame.K_DOWN:
+    
+    if event.key == pygame.K_DOWN:
         ship.moving_down = False
 
 
@@ -48,11 +58,11 @@ def update_screen(game_settings, screen, objects, bullets):
     #Refresh objects on the screen
     for obj in objects:
         obj.update()
-        obj.blitme()
+        obj.draw()
     
     for bullet in bullets.sprites():
-        bullet.draw_bullet()
-        
+        bullet.update()
+        bullet.draw()
     
     #Swith last modified screen
     pygame.display.flip()

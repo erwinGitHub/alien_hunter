@@ -25,7 +25,7 @@ class Bullet(Sprite):
         self.y -= self.speed_factor
         self.rect.y = self.y
         
-    def draw_bullet(self):
+    def draw(self):
         """draw bullet on the screen"""
         
         pygame.draw.rect(self.screen, self.color, self.rect)

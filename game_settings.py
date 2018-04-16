@@ -21,3 +21,6 @@ class Settings():
         self.bullet_height = 15
         self.bullet_color = 200, 200, 200
         
+        #Alien ship settings
+        self.alien_image = "images/alien.png"
+        

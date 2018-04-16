@@ -28,17 +28,20 @@ class Ship():
         """Update ship position"""
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.centerx += self.game_settings.ship_speed_factor    
-        elif self.moving_left and self.rect.left > 0:
+        
+        if self.moving_left and self.rect.left > 0:
             self.centerx -= self.game_settings.ship_speed_factor    
-        elif self.moving_up and self.rect.top > 0:
+        
+        if self.moving_up and self.rect.top > 0:
             self.centery -= self.game_settings.ship_speed_factor
-        elif self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+        
+        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.centery += self.game_settings.ship_speed_factor
 
         #update rectanlge position
         self.rect.centerx = self.centerx    
         self.rect.centery = self.centery    
 
-    def blitme(self):
+    def draw(self):
         self.screen.blit(self.image, self.rect)
         

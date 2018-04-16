@@ -3,6 +3,7 @@ from pygame.sprite import Group
 from game_settings import Settings
 from background import Background
 from ship import Ship
+from alien import Alien
 import game_functions as gf
 
 def run_game():
@@ -18,16 +19,20 @@ def run_game():
     
     #Create background object
     background = Background(game_settings, screen)
-    objects.append(background)
     
     #Create ship object
     ship = Ship(game_settings, screen)
+    
+    #Createalien ship
+    alien = Alien(game_settings, screen)
     
     #Create group for bullets
     bullets = Group()
     
     #Add game objects to list
+    objects.append(background)
     objects.append(ship)
+    objects.append(alien)
     
     while True:
         gf.check_events(game_settings, screen, ship, bullets)
@@ -36,8 +41,6 @@ def run_game():
         for bullet in bullets.copy():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
-        
-        bullets.update()
         
         #Refreash screen           
         gf.update_screen(game_settings, screen, objects, bullets)        
