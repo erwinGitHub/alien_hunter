@@ -19,30 +19,26 @@ def run_game():
     
     #Create background object
     background = Background(game_settings, screen)
+    objects.append(background)
     
     #Create ship object
     ship = Ship(game_settings, screen)
+    objects.append(ship)
     
-    #Createalien ship
-    alien = Alien(game_settings, screen)
+    #Create group of alien ships
+    aliens = Group()
+    aliens.add(Alien(game_settings, screen, 10, 100))
+    aliens.add(Alien(game_settings, screen, 140, 250))
+    aliens.add(Alien(game_settings, screen, 270, 400))
     
     #Create group for bullets
     bullets = Group()
     
-    #Add game objects to list
-    objects.append(background)
-    objects.append(ship)
-    objects.append(alien)
-    
     while True:
+        #Check events key down or key up
         gf.check_events(game_settings, screen, ship, bullets)
         
-        #Remove bullets outside screen
-        for bullet in bullets.copy():
-            if bullet.rect.bottom <= 0:
-                bullets.remove(bullet)
-        
         #Refreash screen           
-        gf.update_screen(game_settings, screen, objects, bullets)        
+        gf.update_screen(game_settings, screen, objects, bullets, aliens)        
 
 run_game()

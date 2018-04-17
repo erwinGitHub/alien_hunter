@@ -20,12 +20,13 @@ class Bullet(Sprite):
         self.speed_factor = game_settings.bullet_speed_factor
 
     def update(self):
-        """definition of bullet movement"""
-        
+        """
+        definition of bullet movement
+        Only this method will be used from Group o sprites
+        """
         self.y -= self.speed_factor
         self.rect.y = self.y
         
-    def draw(self):
+    def draw_me(self):
         """draw bullet on the screen"""
-        
         pygame.draw.rect(self.screen, self.color, self.rect)

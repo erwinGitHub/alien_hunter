@@ -42,6 +42,6 @@ class Ship():
         self.rect.centerx = self.centerx    
         self.rect.centery = self.centery    
 
-    def draw(self):
+    def draw_me(self):
         self.screen.blit(self.image, self.rect)
         

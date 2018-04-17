@@ -20,7 +20,7 @@ class Background():
         pass
         
 
-    def draw(self):
+    def draw_me(self):
         """Load background image on the screen"""
         self.screen.blit(self.image, self.rect)
         

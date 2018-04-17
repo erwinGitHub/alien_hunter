@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 class Alien(Sprite):
     """Class which describes one alien ship"""
     
-    def __init__(self, game_settings, screen):
+    def __init__(self, game_settings, screen, x, y):
         """init object settings"""
         super(Alien, self).__init__()
         self.screen = screen
@@ -15,16 +15,26 @@ class Alien(Sprite):
         self.rect = self.image.get_rect()
         
         #Set initial position for alien ship
-        self.rect.x = 0
-        self.rect.y = 100
+        self.rect.x = x
+        self.rect.y = y
         
         #Save precission position of alien ship
         self.x = float(self.rect.x)
         
+        self.speed_factor = 2
+        self.right = True
+        
     def update(self):
-        pass
+        if self.right:
+            self.x += self.speed_factor
+        else:
+            self.x -= self.speed_factor
+                
+        if self.rect.right >= self.game_settings.screen_width:
+            self.right = False
+        
+        if self.rect.left <= 0:
+            self.right = True
             
-    def draw(self):
-        """Draw alien ship"""
-        self.screen.blit(self.image, self.rect)
+        self.rect.x = self.x
         

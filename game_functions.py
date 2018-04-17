@@ -18,8 +18,7 @@ def keydown_events(event, game_settings, screen, ship, bullets):
         ship.moving_down = True
     
     if event.key == pygame.K_SPACE:
-        new_bullet = Bullet(game_settings, screen, ship)
-        bullets.add(new_bullet)
+        bullets.add(Bullet(game_settings, screen, ship))
     
     if event.key == pygame.K_q:
         sys.exit()    
@@ -53,16 +52,30 @@ def check_events(game_settings, screen, ship, bullets):
             keyup_events(event, ship)
 
 
-def update_screen(game_settings, screen, objects, bullets):
+def update_screen(game_settings, screen, objects, bullets, aliens):
     """Update images on screen then flip screen"""
     #Refresh objects on the screen
     for obj in objects:
         obj.update()
-        obj.draw()
+        obj.draw_me()
+
+    #Remove bullets outside screen
+    for b in bullets.copy():
+        if b.rect.bottom <= 0:
+            bullets.remove(b)
+
+    #Update position of all bullets and aliens. To do this I use update method
+    #Method update is run automatically for all sprites
+    bullets.update()
+    aliens.update()
     
+    #Here I need to loop through all sprites because I need to draw all 
+    #bullets. The Group class do not support draw_me method!
     for bullet in bullets.sprites():
-        bullet.update()
-        bullet.draw()
+        bullet.draw_me()
     
+    
+    #Here I draw aliens. I do it by run bethod draw for all sprites
+    aliens.draw(screen)
     #Swith last modified screen
     pygame.display.flip()
