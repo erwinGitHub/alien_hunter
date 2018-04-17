@@ -1,6 +1,7 @@
 import sys
 import pygame
 from bullet import Bullet
+from alien import Alien
 
 
 def keydown_events(event, game_settings, screen, ship, bullets):
@@ -51,6 +52,29 @@ def check_events(game_settings, screen, ship, bullets):
         elif event.type == pygame.KEYUP:
             keyup_events(event, ship)
 
+
+def create_fleet(game_settings, screen, aliens):
+    """Create fleet of aliens"""
+    #Clculate how many aliens are possible to be load on panel in one row
+    #Create temporary the alien object and retrieve width of this object
+    a = Alien(game_settings, screen, 0, 0)
+    alien_width = a.rect.width
+    alien_height = a.rect.height
+    number_of_aliens_in_row = int(game_settings.screen_width/(2*alien_width))
+    number_of_rows = int(game_settings.screen_height/(2*alien_height))
+    
+    #Create rows
+    y = 0
+    for row_number in range(number_of_rows - 1):
+        #Create one row of aliens
+        x = alien_width
+        for alien_number in range(number_of_aliens_in_row - 1):
+            alien = Alien(game_settings, screen, x, y)
+            aliens.add(alien)
+            x += 2 * alien_width
+
+        y += 2 * alien_height 
+        
 
 def update_screen(game_settings, screen, objects, bullets, aliens):
     """Update images on screen then flip screen"""

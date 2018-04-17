@@ -21,20 +21,5 @@ class Alien(Sprite):
         #Save precission position of alien ship
         self.x = float(self.rect.x)
         
-        self.speed_factor = 2
-        self.right = True
-        
     def update(self):
-        if self.right:
-            self.x += self.speed_factor
-        else:
-            self.x -= self.speed_factor
-                
-        if self.rect.right >= self.game_settings.screen_width:
-            self.right = False
-        
-        if self.rect.left <= 0:
-            self.right = True
-            
-        self.rect.x = self.x
-        
+        pass      

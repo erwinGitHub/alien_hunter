@@ -3,7 +3,6 @@ from pygame.sprite import Group
 from game_settings import Settings
 from background import Background
 from ship import Ship
-from alien import Alien
 import game_functions as gf
 
 def run_game():
@@ -27,9 +26,7 @@ def run_game():
     
     #Create group of alien ships
     aliens = Group()
-    aliens.add(Alien(game_settings, screen, 10, 100))
-    aliens.add(Alien(game_settings, screen, 140, 250))
-    aliens.add(Alien(game_settings, screen, 270, 400))
+    gf.create_fleet(game_settings, screen, aliens)
     
     #Create group for bullets
     bullets = Group()
