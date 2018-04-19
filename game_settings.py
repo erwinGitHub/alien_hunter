@@ -23,4 +23,5 @@ class Settings():
         
         #Alien ship settings
         self.alien_image = "images/alien.png"
-        
+        self.alien_speed_factor = 5
+        self.alien_drop_factor = 100

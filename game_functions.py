@@ -88,9 +88,16 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
         if b.rect.bottom <= 0:
             bullets.remove(b)
 
-    #Update position of all bullets and aliens. To do this I use update method
+    #Update position of all bullets. To do this I use update method
     #Method update is run automatically for all sprites
     bullets.update()
+    
+    #Check collisions between bullets and aliens. In case bullet colide
+    #with alien then remove both
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    
+    #Update position of all aliens. To do this I use update method
+    #Method update is run automatically for all sprites
     aliens.update()
     
     #Here I need to loop through all sprites because I need to draw all 
@@ -99,7 +106,7 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
         bullet.draw_me()
     
     
-    #Here I draw aliens. I do it by run bethod draw for all sprites
+    #Here I draw aliens. I do it by run method draw for all sprites
     aliens.draw(screen)
     #Swith last modified screen
     pygame.display.flip()
