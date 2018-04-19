@@ -19,7 +19,8 @@ def keydown_events(event, game_settings, screen, ship, bullets):
         ship.moving_down = True
     
     if event.key == pygame.K_SPACE:
-        bullets.add(Bullet(game_settings, screen, ship))
+        if len(bullets) < 3:
+            bullets.add(Bullet(game_settings, screen, ship))
     
     if event.key == pygame.K_q:
         sys.exit()    
@@ -61,7 +62,7 @@ def create_fleet(game_settings, screen, aliens):
     alien_width = a.rect.width
     alien_height = a.rect.height
     number_of_aliens_in_row = int(game_settings.screen_width/(2*alien_width))
-    number_of_rows = int(game_settings.screen_height/(2*alien_height))
+    number_of_rows = int(game_settings.screen_height/(4*alien_height))
     
     #Create rows
     y = 0
@@ -99,6 +100,7 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
     #Update position of all aliens. To do this I use update method
     #Method update is run automatically for all sprites
     aliens.update()
+    
     
     #Here I need to loop through all sprites because I need to draw all 
     #bullets. The Group class do not support draw_me method!

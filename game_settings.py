@@ -13,15 +13,15 @@ class Settings():
         
         #Ship settings
         self.ship_image = "images/xwing.png"
-        self.ship_speed_factor = 2
+        self.ship_speed_factor = 3.5
         
         #Bullet settings
-        self.bullet_speed_factor = 4.5
+        self.bullet_speed_factor = 5.5
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = 200, 200, 200
         
         #Alien ship settings
         self.alien_image = "images/alien.png"
-        self.alien_speed_factor = 5
+        self.alien_speed_factor = 3
         self.alien_drop_factor = 100

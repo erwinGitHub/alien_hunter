@@ -31,7 +31,7 @@ class Alien(Sprite):
         self.current_drop_factor = 0.0
         
         #speed and drop factors
-        self.speed_factor = random.randint(2, game_settings.alien_speed_factor)
+        self.speed_factor = random.randint(1, game_settings.alien_speed_factor)
         self.drop_factor = random.randint(50, game_settings.alien_drop_factor)
         
     
