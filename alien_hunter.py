@@ -36,6 +36,15 @@ def run_game():
         gf.check_events(game_settings, screen, ship, bullets)
         
         #Refreash screen           
-        gf.update_screen(game_settings, screen, objects, bullets, aliens)        
+        gf.update_screen(game_settings, screen, objects, bullets, aliens)
+        
+        #Chack if end game
+        if game_settings.game_end:
+            break        
 
-run_game()
+
+game = input('Start Game (y/n)?:')
+while game == 'y':
+    run_game()
+    print('\n\nGAME OVER!')
+    game = input('Would You like to play once again (y/n)?:')

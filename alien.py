@@ -47,6 +47,16 @@ class Alien(Sprite):
         if self.rect.left <= self.screen_rect.left:
             self.movement_dirrection = 1    
             self.current_drop_factor = self.drop_factor
+    
+    
+    def check_bottom(self):
+        """
+        Method which checks if alien reached bottom f screen.
+        """  
+        if self.rect.bottom >= self.screen_rect.bottom:
+            return True
+        else:
+            return False
         
     
     def update(self):

@@ -1,6 +1,7 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship():
+class Ship(Sprite):
     """Class which describes ship"""
 
     def __init__(self, game_settings, screen):

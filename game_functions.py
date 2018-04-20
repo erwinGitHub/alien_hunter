@@ -62,7 +62,7 @@ def create_fleet(game_settings, screen, aliens):
     alien_width = a.rect.width
     alien_height = a.rect.height
     number_of_aliens_in_row = int(game_settings.screen_width/(2*alien_width))
-    number_of_rows = int(game_settings.screen_height/(4*alien_height))
+    number_of_rows = int(game_settings.screen_height/(3*alien_height))
     
     #Create rows
     y = 0
@@ -101,6 +101,19 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
     #Method update is run automatically for all sprites
     aliens.update()
     
+    #Check if any alien reached bottom
+    for alien in aliens:
+        if alien.check_bottom():
+            print('You loose!!! ')
+            game_settings.game_end = True
+            break
+    
+    #Check if any alien collide with ship
+    if pygame.sprite.spritecollideany(objects[1], aliens):
+        print('Ship was destroyed!!!')
+        game_settings.game_end = True
+        
+        
     
     #Here I need to loop through all sprites because I need to draw all 
     #bullets. The Group class do not support draw_me method!
@@ -111,4 +124,5 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
     #Here I draw aliens. I do it by run method draw for all sprites
     aliens.draw(screen)
     #Swith last modified screen
-    pygame.display.flip()
+    pygame.display.flip()  
+    
