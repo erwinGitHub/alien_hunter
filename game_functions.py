@@ -2,6 +2,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+from button import Button
 
 
 def keydown_events(event, game_settings, screen, ship, bullets):
@@ -40,8 +41,21 @@ def keyup_events(event, ship):
     if event.key == pygame.K_DOWN:
         ship.moving_down = False
 
+def mousemotion_event(buttons):
+    """Reaction on mouse motion event. Simply change color of hoover buttons""" 
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_buttons = pygame.mouse.get_pressed()
+    buttons.update(mouse_pos, mouse_buttons[0])
 
-def check_events(game_settings, screen, ship, bullets):
+
+def mousebuttondown_event(buttons):
+    """Reaction on mouse motion event. Simply change color of hoover buttons""" 
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_buttons = pygame.mouse.get_pressed()
+    buttons.update(mouse_pos, mouse_buttons[0])
+
+
+def check_events(game_settings, screen, ship, bullets, buttons):
     """Reaction on events thrown by keyboard"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,7 +66,14 @@ def check_events(game_settings, screen, ship, bullets):
                 
         elif event.type == pygame.KEYUP:
             keyup_events(event, ship)
-
+            
+        elif event.type == pygame.MOUSEMOTION:
+            mousemotion_event(buttons)
+        
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mousebuttondown_event(buttons)
+            
+        
 
 def create_fleet(game_settings, screen, aliens):
     """Create fleet of aliens"""
@@ -77,7 +98,13 @@ def create_fleet(game_settings, screen, aliens):
         y += 2 * alien_height 
         
 
-def update_screen(game_settings, screen, objects, bullets, aliens):
+def create_start_buttons(screen, buttons):
+    """Create buttons"""
+    
+    b = Button(screen, "test button", 150, 100, 100, 50)
+    buttons.add(b)
+    
+def update_screen(game_settings, screen, objects, bullets, aliens, buttons):
     """Update images on screen then flip screen"""
     #Refresh objects on the screen
     for obj in objects:
@@ -114,11 +141,15 @@ def update_screen(game_settings, screen, objects, bullets, aliens):
         game_settings.game_end = True
         
         
-    
     #Here I need to loop through all sprites because I need to draw all 
     #bullets. The Group class do not support draw_me method!
     for bullet in bullets.sprites():
         bullet.draw_me()
+    
+    #Here I need to loop through all button sprites because I need to draw all 
+    #of them. The Group class do not support draw_me method!
+    for button in buttons.sprites():
+        button.draw_me()
     
     
     #Here I draw aliens. I do it by run method draw for all sprites

@@ -30,13 +30,17 @@ def run_game():
     
     #Create group for bullets
     bullets = Group()
+
+    #Create group of buttons
+    buttons = Group()
+    gf.create_start_buttons(screen, buttons)
     
     while True:
         #Check events key down or key up
-        gf.check_events(game_settings, screen, ship, bullets)
+        gf.check_events(game_settings, screen, ship, bullets, buttons)
         
         #Refreash screen           
-        gf.update_screen(game_settings, screen, objects, bullets, aliens)
+        gf.update_screen(game_settings, screen, objects, bullets, aliens, buttons)
         
         #Chack if end game
         if game_settings.game_end:
