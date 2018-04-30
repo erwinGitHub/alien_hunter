@@ -5,85 +5,81 @@ from alien import Alien
 from button import Button
 
 
-def keydown_events(event, game_settings, screen, ship, bullets):
+def keydown_events(event, game_objects):
     """Keydown events actions"""
     if event.key == pygame.K_RIGHT:
-        ship.moving_right = True
+        game_objects["ship"].moving_right = True
     
     if event.key == pygame.K_LEFT:
-        ship.moving_left = True
+        game_objects["ship"].moving_left = True
     
     if event.key == pygame.K_UP:
-        ship.moving_up = True
+        game_objects["ship"].moving_up = True
     
     if event.key == pygame.K_DOWN:
-        ship.moving_down = True
+        game_objects["ship"].moving_down = True
     
     if event.key == pygame.K_SPACE:
-        if len(bullets) < 3:
-            bullets.add(Bullet(game_settings, screen, ship))
+        if len(game_objects["bullets"]) < 3:
+            game_objects["bullets"].add(Bullet(game_objects))
     
     if event.key == pygame.K_q:
         sys.exit()    
 
      
-def keyup_events(event, ship):
+def keyup_events(event, game_obects):
     """Keyup events actions"""
     if event.key == pygame.K_RIGHT:
-        ship.moving_right = False
+        game_objects["ship"].moving_right = False
     
     if event.key == pygame.K_LEFT:
-        ship.moving_left = False
+        game_objects["ship"].moving_left = False
     
     if event.key == pygame.K_UP:
-        ship.moving_up = False
+        game_objects["ship"].moving_up = False
     
     if event.key == pygame.K_DOWN:
-        ship.moving_down = False
+        game_objects["ship"].moving_down = False
 
-def mousemotion_event(buttons):
-    """Reaction on mouse motion event. Simply change color of hoover buttons""" 
+def mouse_event(game_objects):
+    """Reaction on any mouse event.""" 
     mouse_pos = pygame.mouse.get_pos()
     mouse_buttons = pygame.mouse.get_pressed()
-    buttons.update(mouse_pos, mouse_buttons[0])
+    for button in game_objects["buttons"].sprites():
+        button.update_me(mouse_pos, mouse_buttons[0])
 
 
-def mousebuttondown_event(buttons):
-    """Reaction on mouse motion event. Simply change color of hoover buttons""" 
-    mouse_pos = pygame.mouse.get_pos()
-    mouse_buttons = pygame.mouse.get_pressed()
-    buttons.update(mouse_pos, mouse_buttons[0])
-
-
-def check_events(game_settings, screen, ship, bullets, buttons):
+def check_events(game_objects):
     """Reaction on events thrown by keyboard"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         
         elif event.type == pygame.KEYDOWN:
-            keydown_events(event, game_settings, screen, ship, bullets)
+            keydown_events(event, game_objects)
                 
         elif event.type == pygame.KEYUP:
-            keyup_events(event, ship)
+            keyup_events(event, game_objects)
             
         elif event.type == pygame.MOUSEMOTION:
-            mousemotion_event(buttons)
+            mouse_event(game_objects)
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            mousebuttondown_event(buttons)
+            mouse_event(game_objects)
             
+        elif event.type == pygame.MOUSEBUTTONUP:
+            mouse_event(game_objects)
         
 
-def create_fleet(game_settings, screen, aliens):
+def create_fleet(game_objects):
     """Create fleet of aliens"""
     #Clculate how many aliens are possible to be load on panel in one row
     #Create temporary the alien object and retrieve width of this object
-    a = Alien(game_settings, screen, 0, 0)
+    a = Alien(game_objects, 0, 0)
     alien_width = a.rect.width
     alien_height = a.rect.height
-    number_of_aliens_in_row = int(game_settings.screen_width/(2*alien_width))
-    number_of_rows = int(game_settings.screen_height/(3*alien_height))
+    number_of_aliens_in_row = int(game_objects["game_settings"].screen_width/(2*alien_width))
+    number_of_rows = int(game_objects["game_settings"].screen_height/(3*alien_height))
     
     #Create rows
     y = 0
@@ -91,69 +87,50 @@ def create_fleet(game_settings, screen, aliens):
         #Create one row of aliens
         x = alien_width
         for alien_number in range(number_of_aliens_in_row - 1):
-            alien = Alien(game_settings, screen, x, y)
-            aliens.add(alien)
+            alien = Alien(game_objects, x, y)
+            game_objects["aliens"].add(alien)
             x += 2 * alien_width
 
         y += 2 * alien_height 
         
 
-def create_start_buttons(screen, buttons):
+def create_start_buttons(game_objects):
     """Create buttons"""
     
-    b = Button(screen, "test button", 150, 100, 100, 50)
-    buttons.add(b)
+    b = Button(game_objects, "test button", 150, 100, 100, 50)
+    game_objects["buttons"].add(b)
     
-def update_screen(game_settings, screen, objects, bullets, aliens, buttons):
+    
+def update_screen(game_objects):
     """Update images on screen then flip screen"""
-    #Refresh objects on the screen
-    for obj in objects:
-        obj.update()
-        obj.draw_me()
-
-    #Remove bullets outside screen
-    for b in bullets.copy():
-        if b.rect.bottom <= 0:
-            bullets.remove(b)
-
-    #Update position of all bullets. To do this I use update method
-    #Method update is run automatically for all sprites
-    bullets.update()
     
+    #Remove bullets outside screen
+    for b in game_objects["bullets"].copy():
+        if b.rect.bottom <= 0:
+            game_objects["bullets"].remove(b)
+
     #Check collisions between bullets and aliens. In case bullet colide
     #with alien then remove both
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
-    
-    #Update position of all aliens. To do this I use update method
-    #Method update is run automatically for all sprites
-    aliens.update()
-    
+    collisions = pygame.sprite.groupcollide(game_objects["bullets"], 
+                                            game_objects["aliens"], True, True)
+
     #Check if any alien reached bottom
-    for alien in aliens:
+    for alien in game_objects["aliens"]:
         if alien.check_bottom():
             print('You loose!!! ')
-            game_settings.game_end = True
+            game_objects["game_settings"].game_end = True
             break
-    
+
     #Check if any alien collide with ship
-    if pygame.sprite.spritecollideany(objects[1], aliens):
+    if pygame.sprite.spritecollideany(game_objects["ship"], game_objects["aliens"]):
         print('Ship was destroyed!!!')
-        game_settings.game_end = True
+        game_objects["game_settings"].game_end = True
         
-        
-    #Here I need to loop through all sprites because I need to draw all 
-    #bullets. The Group class do not support draw_me method!
-    for bullet in bullets.sprites():
-        bullet.draw_me()
+    #Refresh objects on the screen
+    for obj in game_objects.values():
+        obj.update()
+        obj.draw()
     
-    #Here I need to loop through all button sprites because I need to draw all 
-    #of them. The Group class do not support draw_me method!
-    for button in buttons.sprites():
-        button.draw_me()
-    
-    
-    #Here I draw aliens. I do it by run method draw for all sprites
-    aliens.draw(screen)
     #Swith last modified screen
     pygame.display.flip()  
     

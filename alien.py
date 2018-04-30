@@ -1,19 +1,20 @@
 import pygame
-from pygame.sprite import Sprite
+from game_object import GameObject
 import random
 
-class Alien(Sprite):
+class Alien(GameObject):
     """Class which describes one alien ship"""
     
-    def __init__(self, game_settings, screen, x, y):
+    def __init__(self, game_objects, x, y):
         """init object settings"""
-        super(Alien, self).__init__()
-        self.screen = screen
-        self.screen_rect = screen.get_rect()
-        self.game_settings = game_settings
+        super().__init__()
+        
+        self.screen = game_objects["screen"].screen
+        self.game_settings = game_objects["game_settings"]
+        self.screen_rect = self.screen.get_rect()
         
         #load alien image
-        self.image = pygame.image.load(game_settings.alien_image)
+        self.image = pygame.image.load(self.game_settings.alien_image)
         self.rect = self.image.get_rect()
         
         #Set initial position for alien ship
@@ -31,8 +32,8 @@ class Alien(Sprite):
         self.current_drop_factor = 0.0
         
         #speed and drop factors
-        self.speed_factor = random.randint(1, game_settings.alien_speed_factor)
-        self.drop_factor = random.randint(50, game_settings.alien_drop_factor)
+        self.speed_factor = random.randint(1, self.game_settings.alien_speed_factor)
+        self.drop_factor = random.randint(50, self.game_settings.alien_drop_factor)
         
     
     def check_edges(self):

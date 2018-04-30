@@ -1,23 +1,26 @@
 import pygame
-from pygame.sprite import Sprite
+from game_object import GameObject
 
-class Bullet(Sprite):
+class Bullet(GameObject):
     """Class to manage bullets"""
     
-    def __init__(self, game_settings, screen, ship):
+    def __init__(self, game_objects):
         """Initiation of object bullet"""
         super().__init__()
-        self.screen = screen
-        self.rect = pygame.Rect(0, 0, game_settings.bullet_width,
-            game_settings.bullet_height)
-        self.rect.centerx = ship.rect.centerx
-        self.rect.top = ship.rect.top
+        
+        self.screen = game_objects["screen"].screen
+        self.game_settings = game_objects["game_settings"]
+        self.ship = game_objects["ship"]
+        self.rect = pygame.Rect(0, 0, self.game_settings.bullet_width,
+            self.game_settings.bullet_height)
+        self.rect.centerx = self.ship.rect.centerx
+        self.rect.top = self.ship.rect.top
         
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
         
-        self.color = game_settings.bullet_color
-        self.speed_factor = game_settings.bullet_speed_factor
+        self.color = self.game_settings.bullet_color
+        self.speed_factor = self.game_settings.bullet_speed_factor
 
     def update(self):
         """

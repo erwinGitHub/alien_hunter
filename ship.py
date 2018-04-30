@@ -1,17 +1,20 @@
 import pygame
-from pygame.sprite import Sprite
+from game_object import GameObject
 
-class Ship(Sprite):
+class Ship(GameObject):
     """Class which describes ship"""
 
-    def __init__(self, game_settings, screen):
+    def __init__(self, game_objects):
         """Ship initiation and its initial position"""
-        self.screen = screen
-        self.game_settings = game_settings
         
-        self.image = pygame.image.load(game_settings.ship_image)
+        super().__init__()
+        
+        self.screen = game_objects["screen"].screen
+        self.game_settings = game_objects["game_settings"]
+        
+        self.image = pygame.image.load(self.game_settings.ship_image)
         self.rect = self.image.get_rect()
-        self.screen_rect = screen.get_rect()
+        self.screen_rect = game_objects["screen"].screen.get_rect()
         
         #Set ship initial position
         self.rect.centerx = self.screen_rect.centerx
@@ -43,6 +46,6 @@ class Ship(Sprite):
         self.rect.centerx = self.centerx    
         self.rect.centery = self.centery    
 
-    def draw_me(self):
+    def draw(self):
         self.screen.blit(self.image, self.rect)
         

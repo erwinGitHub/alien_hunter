@@ -1,11 +1,11 @@
 import pygame
-from pygame.sprite import Sprite
+from game_object import GameObject
 from pygame.font import Font
 
-class Button(Sprite):
+class Button(GameObject):
     """Class to manage buttons"""
     
-    def __init__(self, screen,  text='', x=0, y=0, width=2, height=2):
+    def __init__(self, game_objects,  text='', x=0, y=0, width=2, height=2):
         """Initiation of object button"""
         super().__init__()
         
@@ -19,7 +19,7 @@ class Button(Sprite):
         self.text_color = (0, 0, 0)
         self.text_size = 36
 
-        self.screen = screen
+        self.screen = game_objects["screen"].screen
         self.rect = pygame.Rect(x, y, width, height)
         
         #Set text on button
@@ -30,11 +30,10 @@ class Button(Sprite):
             self.rect.width = self.text_rect.width + self.text_size
             self.rect.height = self.text_rect.height + self.text_size
             self.text_rect.center = self.rect.center
-            
         
         
-        
-    def update(self, mouse_pos, clicked=False):
+    def update_me(self, mouse_pos, clicked=False):
+        """Update current color of buton depend on mouse position"""
         if self.rect.collidepoint(mouse_pos):
             if clicked:
                 self.current_color = self.click_color
@@ -43,7 +42,7 @@ class Button(Sprite):
         else:
             self.current_color = self.color
 
-    def draw_me(self):
+    def draw(self):
         """draw button on the screen"""
         pygame.draw.rect(self.screen, self.border_color, self.rect)
         b = pygame.Rect(self.rect.x+1, self.rect.y+1, self.rect.width-2, self.rect.height-2)
@@ -51,6 +50,3 @@ class Button(Sprite):
         
         if self.text != '':
             self.screen.blit(self.text_img, self.text_rect)
-        
-        
-        
