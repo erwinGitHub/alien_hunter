@@ -1,8 +1,8 @@
 import pygame
-from game_object import GameObject
+from pygame.sprite import Sprite
 import random
 
-class Alien(GameObject):
+class Alien(Sprite):
     """Class which describes one alien ship"""
     
     def __init__(self, screen, game_settings, x, y):
@@ -58,8 +58,10 @@ class Alien(GameObject):
             return True
         else:
             return False
-        
-    
+
+    def draw(self):
+        self.screen.blit(self.image, self.rect)
+
     def update(self):
         """Update alien ship position on screen""" 
         self.check_edges()
@@ -71,3 +73,5 @@ class Alien(GameObject):
       
         self.rect.x = self.x      
         self.rect.y = self.y      
+
+        self.draw()

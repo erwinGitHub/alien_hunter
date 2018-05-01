@@ -5,73 +5,75 @@ from alien import Alien
 from button import Button
 
 
-def keydown_events(event, game_objects):
+def keydown_events(event, game_objects, ship, bullets):
     """Keydown events actions"""
     if event.key == pygame.K_RIGHT:
-        game_objects["ship"].moving_right = True
+        ship.moving_right = True
     
     if event.key == pygame.K_LEFT:
-        game_objects["ship"].moving_left = True
+        ship.moving_left = True
     
     if event.key == pygame.K_UP:
-        game_objects["ship"].moving_up = True
+        ship.moving_up = True
     
     if event.key == pygame.K_DOWN:
-        game_objects["ship"].moving_down = True
+        ship.moving_down = True
     
     if event.key == pygame.K_SPACE:
-        if len(game_objects["bullets"]) < 3:
-            game_objects["bullets"].add(Bullet(game_objects))
-    
+        bullet = ship.fire()
+        if bullet != None:
+            bullets.add(bullet)
+            game_objects.add(bullet)
+            
     if event.key == pygame.K_q:
         sys.exit()    
 
      
-def keyup_events(event, game_objects):
+def keyup_events(event, ship):
     """Keyup events actions"""
     if event.key == pygame.K_RIGHT:
-        game_objects["ship"].moving_right = False
+        ship.moving_right = False
     
     if event.key == pygame.K_LEFT:
-        game_objects["ship"].moving_left = False
+        ship.moving_left = False
     
     if event.key == pygame.K_UP:
-        game_objects["ship"].moving_up = False
+        ship.moving_up = False
     
     if event.key == pygame.K_DOWN:
-        game_objects["ship"].moving_down = False
+        ship.moving_down = False
 
-def mouse_event(game_objects):
+def mouse_event(buttons):
     """Reaction on any mouse event.""" 
     mouse_pos = pygame.mouse.get_pos()
     mouse_buttons = pygame.mouse.get_pressed()
-    for button in game_objects["buttons"].sprites():
+    for button in buttons.sprites():
         button.update_me(mouse_pos, mouse_buttons[0])
 
 
-def check_events(game_objects):
+def check_events(game_objects, ship, bullets, buttons):
     """Reaction on events thrown by keyboard"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         
         elif event.type == pygame.KEYDOWN:
-            keydown_events(event, game_objects)
+            keydown_events(event, game_objects, ship, bullets)
                 
         elif event.type == pygame.KEYUP:
-            keyup_events(event, game_objects)
+            keyup_events(event, ship)
             
         elif event.type == pygame.MOUSEMOTION:
-            mouse_event(game_objects)
+            mouse_event(buttons)
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_event(game_objects)
+            mouse_event(buttons)
             
         elif event.type == pygame.MOUSEBUTTONUP:
-            mouse_event(game_objects)
+            mouse_event(buttons)
         
 
-def create_fleet(screen, game_settings, game_objects):
+def create_fleet(screen, game_settings, game_objects, aliens):
     """Create fleet of aliens"""
     #Clculate how many aliens are possible to be load on panel in one row
     #Create temporary the alien object and retrieve width of this object
@@ -87,58 +89,54 @@ def create_fleet(screen, game_settings, game_objects):
         #Create one row of aliens
         x = alien_width
         for alien_number in range(number_of_aliens_in_row - 1):
-            game_objects["aliens"].add(Alien(screen, game_settings, x, y))
+            alien = Alien(screen, game_settings, x, y)
+            game_objects.add(alien)
+            aliens.add(alien)
             x += 2 * alien_width
 
         y += 2 * alien_height 
         
 
-def create_start_buttons(screen, game_settings, game_objects):
+def create_start_buttons(screen, game_settings, game_objects, buttons):
     """Create buttons"""
     
     b = Button(screen, game_settings, "test button", 150, 100, 100, 50)
-    game_objects["buttons"].add(b)
+    game_objects.add(b)
+    buttons.add(b)
     
-    
-def update_screen(screen, game_settings, game_objects):
-    """Update images on screen then flip screen"""
-    
+def check_collisions(game_stats, game_objects, ship, aliens, bullets):
+    """Calculate collisions n game"""
+        
     #Remove bullets outside screen
-    for b in game_objects["bullets"].copy():
-        if b.rect.bottom <= 0:
-            game_objects["bullets"].remove(b)
+    for bullet in bullets.copy():
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+            game_objects.remove(bullet)
 
     #Check collisions between bullets and aliens. In case bullet colide
     #with alien then remove both
-    collisions = pygame.sprite.groupcollide(game_objects["bullets"], 
-                                            game_objects["aliens"], True, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    game_stats.points += len(collisions)
 
     #Check if any alien reached bottom
-    for alien in game_objects["aliens"].sprites():
+    for alien in aliens.sprites():
         if alien.check_bottom():
             print('You loose!!! ')
-            game_settings.game_end = True
+            game_stats.game_started = False
             break
 
     #Check if any alien collide with ship
-    if pygame.sprite.spritecollideany(game_objects["ship"], game_objects["aliens"]):
+    if pygame.sprite.spritecollideany(ship, aliens):
         print('Ship was destroyed!!!')
-        game_settings.game_end = True
-        
+        game_stats.game_started = False
+            
     
+def update_screen(game_objects):
+    """Update images on screen then flip screen"""
     
-    for key, obj in game_objects.items():
-        if key == 'bullets' or key == 'buttons':
-            for o in obj.sprites():
-                o.draw_me()
-        else:
-            obj.draw(screen)
-    
+    #Update background
+    game_objects.update()
 
-    #Refresh objects on the screen
-    for obj in game_objects.values():
-        obj.update()
-    
     #Swith last modified screen
     pygame.display.flip()  
     

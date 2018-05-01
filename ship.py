@@ -1,7 +1,8 @@
 import pygame
-from game_object import GameObject
+from pygame.sprite import Sprite
+from bullet import Bullet
 
-class Ship(GameObject):
+class Ship(Sprite):
     """Class which describes ship"""
 
     def __init__(self, screen, game_settings):
@@ -27,6 +28,9 @@ class Ship(GameObject):
         self.moving_left = False
         self.moving_up = False
         self.moving_down = False
+
+    def draw(self):
+        self.screen.blit(self.image, self.rect)
         
     def update(self):
         """Update ship position"""
@@ -46,3 +50,12 @@ class Ship(GameObject):
         self.rect.centerx = self.centerx    
         self.rect.centery = self.centery    
         
+        #draw ship
+        self.draw()
+        
+    def fire(self):
+        if self.game_settings.ammo > 0:
+            self.game_settings.ammo -= 1
+            return Bullet(self.screen, self.game_settings, self.rect.centerx, self.rect.top)
+        else:
+            None

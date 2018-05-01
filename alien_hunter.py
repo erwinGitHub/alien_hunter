@@ -1,17 +1,25 @@
 import pygame
+from pygame.time import Clock
 from pygame.sprite import Group
 from game_settings import Settings
+from game_statistics import Stats
 from background import Background
 from ship import Ship
 import game_functions as gf
 
 def run_game():
 
-    #Create game_objects dictionary
-    game_objects = {}
+    #Create some groups of objects
+    game_objects = Group()
+    bullets = Group()
+    aliens = Group()
+    buttons = Group()
     
     #Initialize game settings
-    game_settings = Settings();
+    game_settings = Settings()
+    
+    #Initialize game statistics
+    game_stats = Stats()
     
     #Pygame initiation, and establish screen  
     pygame.init()
@@ -20,31 +28,34 @@ def run_game():
     pygame.display.set_caption(game_settings.screen_title)
     
     #Create background object
-    game_objects["background"] = Background(screen, game_settings)
+    background = Background(screen, game_settings)
+    game_objects.add(background)
     
     #Create ship object
-    game_objects["ship"] = Ship(screen, game_settings)
+    ship = Ship(screen, game_settings)
+    game_objects.add(ship)
     
-    #Create group of alien ships
-    game_objects["aliens"] = Group()
-    gf.create_fleet(screen, game_settings, game_objects)
+    #Create fleet of aliens then add them to game objects and aliens groups
+    gf.create_fleet(screen, game_settings, game_objects, aliens)
     
-    #Create group for bullets
-    game_objects["bullets"] = Group()
+    #Create buttons then ass them to game_objects and buttons groups
+    gf.create_start_buttons(screen, game_settings, game_objects, buttons)
     
-    #Create group of buttons
-    game_objects["buttons"] = Group()
-    gf.create_start_buttons(screen, game_settings, game_objects)
+    #Create clock object
+    clock = Clock()
     
-    while True:
+    while game_stats.game_started:
+        
         #Check events key down or key up
-        gf.check_events(game_objects)
+        gf.check_events(game_objects, ship, bullets, buttons)
         
-        #Refreash screen           
-        gf.update_screen(screen, game_settings, game_objects)
+        #Check collisions
+        gf.check_collisions(game_stats, game_objects, ship, aliens, bullets)
         
-        #Chack if end game
-        if game_settings.game_end:
-            break        
+        #Update screen           
+        gf.update_screen(game_objects)
+
+        #Wait certain time to achieve 40fps 
+        clock.tick(40)
 
 run_game()

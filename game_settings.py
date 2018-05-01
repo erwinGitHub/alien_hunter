@@ -15,6 +15,7 @@ class Settings():
         #Ship settings
         self.ship_image = "images/xwing.png"
         self.ship_speed_factor = 3.5
+        self.ammo = 100
         
         #Bullet settings
         self.bullet_speed_factor = 5.5
@@ -26,6 +27,4 @@ class Settings():
         self.alien_image = "images/alien.png"
         self.alien_speed_factor = 4
         self.alien_drop_factor = 100
-        
-        #General game settings
-        self.game_end = False
+                

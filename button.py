@@ -1,8 +1,8 @@
 import pygame
-from game_object import GameObject
+from pygame.sprite import Sprite
 from pygame.font import Font
 
-class Button(GameObject):
+class Button(Sprite):
     """Class to manage buttons"""
     
     def __init__(self, screen, game_settings, text='', x=0, y=0, width=2, height=2):
@@ -42,7 +42,7 @@ class Button(GameObject):
         else:
             self.current_color = self.color
 
-    def draw_me(self):
+    def update(self):
         """draw button on the screen"""
         pygame.draw.rect(self.screen, self.border_color, self.rect)
         b = pygame.Rect(self.rect.x+1, self.rect.y+1, self.rect.width-2, self.rect.height-2)

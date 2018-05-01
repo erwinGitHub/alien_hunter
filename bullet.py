@@ -1,20 +1,19 @@
 import pygame
-from game_object import GameObject
+from pygame.sprite import Sprite
 
-class Bullet(GameObject):
+class Bullet(Sprite):
     """Class to manage bullets"""
     
-    def __init__(self, screen, game_settings, game_objects):
+    def __init__(self, screen, game_settings, centerx, top):
         """Initiation of object bullet"""
         super().__init__()
         
         self.screen = screen
         self.game_settings = game_settings
-        self.ship = game_objects["ship"]
         self.rect = pygame.Rect(0, 0, self.game_settings.bullet_width,
             self.game_settings.bullet_height)
-        self.rect.centerx = self.ship.rect.centerx
-        self.rect.top = self.ship.rect.top
+        self.rect.centerx = centerx
+        self.rect.top = top
         
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
@@ -29,7 +28,8 @@ class Bullet(GameObject):
         """
         self.y -= self.speed_factor
         self.rect.y = self.y
+        self.draw()
         
-    def draw_me(self):
+    def draw(self):
         """draw bullet on the screen"""
         pygame.draw.rect(self.screen, self.color, self.rect)
