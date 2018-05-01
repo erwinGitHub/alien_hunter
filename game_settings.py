@@ -1,13 +1,8 @@
-from game_object import GameObject
-
-
-class Settings(GameObject):
+class Settings():
     """\class which is used to store all game settings"""
     
     def __init__(self):
         """Settings initiaton"""
-        
-        super().__init__()
         
         #Screen settings
         self.screen_width = 1200

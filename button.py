@@ -5,7 +5,7 @@ from pygame.font import Font
 class Button(GameObject):
     """Class to manage buttons"""
     
-    def __init__(self, game_objects,  text='', x=0, y=0, width=2, height=2):
+    def __init__(self, screen, game_settings, text='', x=0, y=0, width=2, height=2):
         """Initiation of object button"""
         super().__init__()
         
@@ -19,7 +19,7 @@ class Button(GameObject):
         self.text_color = (0, 0, 0)
         self.text_size = 36
 
-        self.screen = game_objects["screen"].screen
+        self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
         
         #Set text on button
@@ -42,7 +42,7 @@ class Button(GameObject):
         else:
             self.current_color = self.color
 
-    def draw(self):
+    def draw_me(self):
         """draw button on the screen"""
         pygame.draw.rect(self.screen, self.border_color, self.rect)
         b = pygame.Rect(self.rect.x+1, self.rect.y+1, self.rect.width-2, self.rect.height-2)

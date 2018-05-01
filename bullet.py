@@ -4,12 +4,12 @@ from game_object import GameObject
 class Bullet(GameObject):
     """Class to manage bullets"""
     
-    def __init__(self, game_objects):
+    def __init__(self, screen, game_settings, game_objects):
         """Initiation of object bullet"""
         super().__init__()
         
-        self.screen = game_objects["screen"].screen
-        self.game_settings = game_objects["game_settings"]
+        self.screen = screen
+        self.game_settings = game_settings
         self.ship = game_objects["ship"]
         self.rect = pygame.Rect(0, 0, self.game_settings.bullet_width,
             self.game_settings.bullet_height)

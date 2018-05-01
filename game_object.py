@@ -7,10 +7,8 @@ class GameObject(Sprite):
         """Initiation of game object"""
         super().__init__()
         
-        
     def update(self):
         pass
         
-
-    def draw(self):
+    def draw(self, surface):
         pass

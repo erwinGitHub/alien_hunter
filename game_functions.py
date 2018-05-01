@@ -27,7 +27,7 @@ def keydown_events(event, game_objects):
         sys.exit()    
 
      
-def keyup_events(event, game_obects):
+def keyup_events(event, game_objects):
     """Keyup events actions"""
     if event.key == pygame.K_RIGHT:
         game_objects["ship"].moving_right = False
@@ -71,15 +71,15 @@ def check_events(game_objects):
             mouse_event(game_objects)
         
 
-def create_fleet(game_objects):
+def create_fleet(screen, game_settings, game_objects):
     """Create fleet of aliens"""
     #Clculate how many aliens are possible to be load on panel in one row
     #Create temporary the alien object and retrieve width of this object
-    a = Alien(game_objects, 0, 0)
+    a = Alien(screen, game_settings, 0, 0)
     alien_width = a.rect.width
     alien_height = a.rect.height
-    number_of_aliens_in_row = int(game_objects["game_settings"].screen_width/(2*alien_width))
-    number_of_rows = int(game_objects["game_settings"].screen_height/(3*alien_height))
+    number_of_aliens_in_row = int(game_settings.screen_width/(2*alien_width))
+    number_of_rows = int(game_settings.screen_height/(3*alien_height))
     
     #Create rows
     y = 0
@@ -87,21 +87,20 @@ def create_fleet(game_objects):
         #Create one row of aliens
         x = alien_width
         for alien_number in range(number_of_aliens_in_row - 1):
-            alien = Alien(game_objects, x, y)
-            game_objects["aliens"].add(alien)
+            game_objects["aliens"].add(Alien(screen, game_settings, x, y))
             x += 2 * alien_width
 
         y += 2 * alien_height 
         
 
-def create_start_buttons(game_objects):
+def create_start_buttons(screen, game_settings, game_objects):
     """Create buttons"""
     
-    b = Button(game_objects, "test button", 150, 100, 100, 50)
+    b = Button(screen, game_settings, "test button", 150, 100, 100, 50)
     game_objects["buttons"].add(b)
     
     
-def update_screen(game_objects):
+def update_screen(screen, game_settings, game_objects):
     """Update images on screen then flip screen"""
     
     #Remove bullets outside screen
@@ -115,21 +114,30 @@ def update_screen(game_objects):
                                             game_objects["aliens"], True, True)
 
     #Check if any alien reached bottom
-    for alien in game_objects["aliens"]:
+    for alien in game_objects["aliens"].sprites():
         if alien.check_bottom():
             print('You loose!!! ')
-            game_objects["game_settings"].game_end = True
+            game_settings.game_end = True
             break
 
     #Check if any alien collide with ship
     if pygame.sprite.spritecollideany(game_objects["ship"], game_objects["aliens"]):
         print('Ship was destroyed!!!')
-        game_objects["game_settings"].game_end = True
+        game_settings.game_end = True
         
+    
+    
+    for key, obj in game_objects.items():
+        if key == 'bullets' or key == 'buttons':
+            for o in obj.sprites():
+                o.draw_me()
+        else:
+            obj.draw(screen)
+    
+
     #Refresh objects on the screen
     for obj in game_objects.values():
         obj.update()
-        obj.draw()
     
     #Swith last modified screen
     pygame.display.flip()  

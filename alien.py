@@ -5,12 +5,12 @@ import random
 class Alien(GameObject):
     """Class which describes one alien ship"""
     
-    def __init__(self, game_objects, x, y):
+    def __init__(self, screen, game_settings, x, y):
         """init object settings"""
         super().__init__()
         
-        self.screen = game_objects["screen"].screen
-        self.game_settings = game_objects["game_settings"]
+        self.screen = screen
+        self.game_settings = game_settings
         self.screen_rect = self.screen.get_rect()
         
         #load alien image

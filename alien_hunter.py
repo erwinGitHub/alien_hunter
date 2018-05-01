@@ -3,7 +3,6 @@ from pygame.sprite import Group
 from game_settings import Settings
 from background import Background
 from ship import Ship
-from screen import Screen
 import game_functions as gf
 
 def run_game():
@@ -13,42 +12,36 @@ def run_game():
     
     #Initialize game settings
     game_settings = Settings();
-    game_objects["game_settings"] = game_settings
     
     #Pygame initiation, and establish screen  
     pygame.init()
-    screen = Screen(game_objects)
+    screen = pygame.display.set_mode((game_settings.screen_width, 
+                        game_settings.screen_height))
     pygame.display.set_caption(game_settings.screen_title)
-    game_objects["screen"] = screen
     
     #Create background object
-    background = Background(game_objects)
-    game_objects["background"] = background
+    game_objects["background"] = Background(screen, game_settings)
     
     #Create ship object
-    ship = Ship(game_objects)
-    game_objects["ship"] = ship
+    game_objects["ship"] = Ship(screen, game_settings)
     
     #Create group of alien ships
-    aliens = Group()
-    game_objects["aliens"] = aliens
-    gf.create_fleet(game_objects)
+    game_objects["aliens"] = Group()
+    gf.create_fleet(screen, game_settings, game_objects)
     
     #Create group for bullets
-    bullets = Group()
-    game_objects["bullets"] = bullets
+    game_objects["bullets"] = Group()
     
     #Create group of buttons
-    buttons = Group()
-    game_objects["buttons"] = buttons
-    gf.create_start_buttons(game_objects)
+    game_objects["buttons"] = Group()
+    gf.create_start_buttons(screen, game_settings, game_objects)
     
     while True:
         #Check events key down or key up
         gf.check_events(game_objects)
         
         #Refreash screen           
-        gf.update_screen(game_objects)
+        gf.update_screen(screen, game_settings, game_objects)
         
         #Chack if end game
         if game_settings.game_end:
