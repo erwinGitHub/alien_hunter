@@ -5,7 +5,7 @@ from pygame.font import Font
 class Button(Sprite):
     """Class to manage buttons"""
     
-    def __init__(self, screen, game_settings, text='', x=0, y=0, width=2, height=2):
+    def __init__(self, screen, text=None, x=0, y=0, width=100, height=50, action=None):
         """Initiation of object button"""
         super().__init__()
         
@@ -21,15 +21,15 @@ class Button(Sprite):
 
         self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
+        self.action = action
         
         #Set text on button
-        if self.text != '':
+        if self.text != None:
             f = Font(None, self.text_size)
             self.text_img = f.render(self.text, True, self.text_color)
             self.text_rect = self.text_img.get_rect()
             self.rect.width = self.text_rect.width + self.text_size
             self.rect.height = self.text_rect.height + self.text_size
-            self.text_rect.center = self.rect.center
         
         
     def update_me(self, mouse_pos, clicked=False):
@@ -44,9 +44,10 @@ class Button(Sprite):
 
     def update(self):
         """draw button on the screen"""
+        self.text_rect.center = self.rect.center
         pygame.draw.rect(self.screen, self.border_color, self.rect)
         b = pygame.Rect(self.rect.x+1, self.rect.y+1, self.rect.width-2, self.rect.height-2)
         pygame.draw.rect(self.screen, self.current_color, b)
         
-        if self.text != '':
+        if self.text != None:
             self.screen.blit(self.text_img, self.text_rect)

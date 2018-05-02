@@ -5,6 +5,7 @@ from game_settings import Settings
 from game_statistics import Stats
 from background import Background
 from ship import Ship
+from label import Label
 import game_functions as gf
 
 def run_game():
@@ -44,16 +45,40 @@ def run_game():
     #Create clock object
     clock = Clock()
     
-    while game_stats.game_started:
+    #Some statistics labels
+    level = Label(screen, "level: " + str(game_stats.level), 10, 10)
+    game_objects.add(level)
+
+    ammo = Label(screen, "ammo: " + str(ship.game_settings.ammo), 200, 10)
+    game_objects.add(ammo)
+
+    points = Label(screen, "score: " + str(game_stats.points), 400, 10)
+    game_objects.add(points)
+
+    #Update screen           
+    gf.update_screen(game_objects)
+
+    while True:
+        if len(aliens) == 0:
+            game_stats.level += 1
+            game_settings.alien_speed_factor += 1
+            game_settings.ammo = game_settings.initial_ammo
+            #Create fleet of aliens then add them to game objects and aliens groups
+            gf.create_fleet(screen, game_settings, game_objects, aliens)
         
         #Check events key down or key up
-        gf.check_events(game_objects, ship, bullets, buttons)
+        gf.check_events(game_stats, game_objects, ship, bullets, buttons)
+    
+        level.text = "level: " + str(game_stats.level)
+        ammo.text = "ammo: " + str(ship.game_settings.ammo)
+        points.text = "score: " + str(game_stats.points)
         
-        #Check collisions
-        gf.check_collisions(game_stats, game_objects, ship, aliens, bullets)
+        if game_stats.game_started:
+            #Check collisions
+            gf.check_collisions(screen, game_settings, game_stats, game_objects, ship, aliens, bullets, buttons)
         
-        #Update screen           
-        gf.update_screen(game_objects)
+            #Update screen           
+            gf.update_screen(game_objects)
 
         #Wait certain time to achieve 40fps 
         clock.tick(40)

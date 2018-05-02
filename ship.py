@@ -39,7 +39,7 @@ class Ship(Sprite):
         
         if self.moving_left and self.rect.left > 0:
             self.centerx -= self.game_settings.ship_speed_factor    
-        
+    
         if self.moving_up and self.rect.top > 0:
             self.centery -= self.game_settings.ship_speed_factor
         

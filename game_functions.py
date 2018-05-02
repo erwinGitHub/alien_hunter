@@ -43,15 +43,20 @@ def keyup_events(event, ship):
     if event.key == pygame.K_DOWN:
         ship.moving_down = False
 
-def mouse_event(buttons):
+
+def mouse_event(buttons, game_stats):
     """Reaction on any mouse event.""" 
     mouse_pos = pygame.mouse.get_pos()
     mouse_buttons = pygame.mouse.get_pressed()
     for button in buttons.sprites():
         button.update_me(mouse_pos, mouse_buttons[0])
+        if mouse_buttons[0] == 1 and button.action == "start":
+            game_stats.game_started = True
+            button.kill()
+        elif mouse_buttons[0] == 1 and button.action == "stop":
+            sys.exit()
 
-
-def check_events(game_objects, ship, bullets, buttons):
+def check_events(game_stats, game_objects, ship, bullets, buttons):
     """Reaction on events thrown by keyboard"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -64,13 +69,13 @@ def check_events(game_objects, ship, bullets, buttons):
             keyup_events(event, ship)
             
         elif event.type == pygame.MOUSEMOTION:
-            mouse_event(buttons)
+            mouse_event(buttons, game_stats)
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_event(buttons)
+            mouse_event(buttons, game_stats)
             
         elif event.type == pygame.MOUSEBUTTONUP:
-            mouse_event(buttons)
+            mouse_event(buttons, game_stats)
         
 
 def create_fleet(screen, game_settings, game_objects, aliens):
@@ -100,34 +105,46 @@ def create_fleet(screen, game_settings, game_objects, aliens):
 def create_start_buttons(screen, game_settings, game_objects, buttons):
     """Create buttons"""
     
-    b = Button(screen, game_settings, "test button", 150, 100, 100, 50)
+    b = Button(screen, "Start Game", action="start")
+    b.rect.centerx = int(game_settings.screen_width/2)
+    b.rect.centery = int(game_settings.screen_height/2)
+    game_objects.add(b)
+    buttons.add(b)
+
+def create_stop_button(screen, game_settings, game_objects, buttons):
+    """Create buttons"""
+    
+    b = Button(screen, "Game Over", action="stop")
+    b.rect.centerx = int(game_settings.screen_width/2)
+    b.rect.centery = int(game_settings.screen_height/2)
     game_objects.add(b)
     buttons.add(b)
     
-def check_collisions(game_stats, game_objects, ship, aliens, bullets):
+def check_collisions(screen, game_settings, game_stats, game_objects, ship, aliens, bullets, buttons):
     """Calculate collisions n game"""
         
     #Remove bullets outside screen
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
-            bullets.remove(bullet)
-            game_objects.remove(bullet)
-
+            bullet.kill()
+            
     #Check collisions between bullets and aliens. In case bullet colide
     #with alien then remove both
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
-    game_stats.points += len(collisions)
+    if collisions:
+        for a in collisions.values():
+            game_stats.points += len(a)
 
     #Check if any alien reached bottom
     for alien in aliens.sprites():
         if alien.check_bottom():
-            print('You loose!!! ')
+            create_stop_button(screen, game_settings, game_objects, buttons)
             game_stats.game_started = False
             break
 
     #Check if any alien collide with ship
     if pygame.sprite.spritecollideany(ship, aliens):
-        print('Ship was destroyed!!!')
+        create_stop_button(screen, game_settings, game_objects, buttons)
         game_stats.game_started = False
             
     
@@ -139,4 +156,3 @@ def update_screen(game_objects):
 
     #Swith last modified screen
     pygame.display.flip()  
-    

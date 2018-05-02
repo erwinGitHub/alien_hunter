@@ -28,6 +28,7 @@ class Bullet(Sprite):
         """
         self.y -= self.speed_factor
         self.rect.y = self.y
+            
         self.draw()
         
     def draw(self):

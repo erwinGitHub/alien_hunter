@@ -15,7 +15,8 @@ class Settings():
         #Ship settings
         self.ship_image = "images/xwing.png"
         self.ship_speed_factor = 3.5
-        self.ammo = 100
+        self.initial_ammo = 50
+        self.ammo = self.initial_ammo
         
         #Bullet settings
         self.bullet_speed_factor = 5.5

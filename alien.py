@@ -37,10 +37,8 @@ class Alien(Sprite):
         
     
     def check_edges(self):
-        """
-        Method which checks if alien is near border. If so then 
-        change movement dirrection
-        """  
+        """Method which checks if alien is near border. If so then 
+        change movement dirrection"""  
         if self.rect.right >= self.screen_rect.right:
             self.movement_dirrection = -1
             self.current_drop_factor = self.drop_factor
@@ -51,9 +49,7 @@ class Alien(Sprite):
     
     
     def check_bottom(self):
-        """
-        Method which checks if alien reached bottom f screen.
-        """  
+        """Method which checks if alien reached bottom f screen."""  
         if self.rect.bottom >= self.screen_rect.bottom:
             return True
         else:
@@ -64,6 +60,7 @@ class Alien(Sprite):
 
     def update(self):
         """Update alien ship position on screen""" 
+        
         self.check_edges()
         self.x += self.speed_factor * self.movement_dirrection
         
@@ -73,5 +70,4 @@ class Alien(Sprite):
       
         self.rect.x = self.x      
         self.rect.y = self.y      
-
         self.draw()
