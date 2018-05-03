@@ -130,10 +130,12 @@ def check_collisions(screen, game_settings, game_stats, game_objects, ship, alie
             
     #Check collisions between bullets and aliens. In case bullet colide
     #with alien then remove both
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, False)
     if collisions:
-        for a in collisions.values():
-            game_stats.points += len(a)
+        for shot_aliens in collisions.values():
+            game_stats.points += len(shot_aliens)
+            for a in shot_aliens:
+                a.shot_down = True
 
     #Check if any alien reached bottom
     for alien in aliens.sprites():
@@ -144,8 +146,9 @@ def check_collisions(screen, game_settings, game_stats, game_objects, ship, alie
 
     #Check if any alien collide with ship
     if pygame.sprite.spritecollideany(ship, aliens):
+        ship.shot_down = True
         create_stop_button(screen, game_settings, game_objects, buttons)
-        game_stats.game_started = False
+        #game_stats.game_started = False
             
     
 def update_screen(game_objects):

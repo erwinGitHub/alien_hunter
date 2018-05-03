@@ -62,7 +62,7 @@ def run_game():
         if len(aliens) == 0:
             game_stats.level += 1
             game_settings.alien_speed_factor += 1
-            game_settings.ammo = game_settings.initial_ammo
+            game_settings.ammo = game_settings.ammo + game_settings.initial_ammo
             #Create fleet of aliens then add them to game objects and aliens groups
             gf.create_fleet(screen, game_settings, game_objects, aliens)
         

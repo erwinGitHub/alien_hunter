@@ -12,10 +12,14 @@ class Ship(Sprite):
         
         self.game_settings = game_settings
         self.screen = screen
-        
-        self.image = pygame.image.load(self.game_settings.ship_image)
-        self.rect = self.image.get_rect()
+        self.images = []
+        for image in self.game_settings.ship_images:
+            self.images.append(pygame.image.load(image))
+            
+        self.rect = self.images[0].get_rect()
         self.screen_rect = self.screen.get_rect()
+        self.current_image = 0
+        self.shot_down = False
         
         #Set ship initial position
         self.rect.centerx = self.screen_rect.centerx
@@ -30,7 +34,13 @@ class Ship(Sprite):
         self.moving_down = False
 
     def draw(self):
-        self.screen.blit(self.image, self.rect)
+        if self.shot_down:
+            self.current_image += 1
+        
+        if self.current_image >= len(self.images):
+            self.kill()
+        else:
+            self.screen.blit(self.images[self.current_image], self.rect)
         
     def update(self):
         """Update ship position"""
@@ -54,7 +64,7 @@ class Ship(Sprite):
         self.draw()
         
     def fire(self):
-        if self.game_settings.ammo > 0:
+        if self.game_settings.ammo > 0 and self.shot_down == False:
             self.game_settings.ammo -= 1
             return Bullet(self.screen, self.game_settings, self.rect.centerx, self.rect.top)
         else:

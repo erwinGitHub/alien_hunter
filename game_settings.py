@@ -13,10 +13,21 @@ class Settings():
         self.background_image = "images/space.jpg"
         
         #Ship settings
-        self.ship_image = "images/xwing.png"
         self.ship_speed_factor = 3.5
-        self.initial_ammo = 50
+        self.initial_ammo = 40
         self.ammo = self.initial_ammo
+        self.ship_images = ["images/xwing.png",
+                                "images/exp1.png", 
+                                "images/exp2.png", 
+                                "images/exp3.png", 
+                                "images/exp4.png", 
+                                "images/exp5.png", 
+                                "images/exp6.png", 
+                                "images/exp7.png", 
+                                "images/exp8.png", 
+                                "images/exp9.png", 
+                                "images/exp10.png"] 
+       
         
         #Bullet settings
         self.bullet_speed_factor = 5.5
@@ -25,7 +36,17 @@ class Settings():
         self.bullet_color = 200, 200, 200
         
         #Alien ship settings
-        self.alien_image = "images/alien.png"
         self.alien_speed_factor = 4
         self.alien_drop_factor = 100
+        self.alien_images = ["images/alien.png",
+                                "images/exp1.png", 
+                                "images/exp2.png", 
+                                "images/exp3.png", 
+                                "images/exp4.png", 
+                                "images/exp5.png", 
+                                "images/exp6.png", 
+                                "images/exp7.png", 
+                                "images/exp8.png", 
+                                "images/exp9.png", 
+                                "images/exp10.png"] 
                 

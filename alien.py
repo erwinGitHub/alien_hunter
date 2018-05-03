@@ -13,9 +13,14 @@ class Alien(Sprite):
         self.game_settings = game_settings
         self.screen_rect = self.screen.get_rect()
         
-        #load alien image
-        self.image = pygame.image.load(self.game_settings.alien_image)
-        self.rect = self.image.get_rect()
+        #load alien images
+        self.images = []
+        for image in self.game_settings.alien_images:
+            self.images.append(pygame.image.load(image))
+            
+        self.rect = self.images[0].get_rect()
+        self.shot_down = False
+        self.current_image = 0
         
         #Set initial position for alien ship
         self.rect.x = x
@@ -34,6 +39,7 @@ class Alien(Sprite):
         #speed and drop factors
         self.speed_factor = random.randint(1, self.game_settings.alien_speed_factor)
         self.drop_factor = random.randint(50, self.game_settings.alien_drop_factor)
+        
         
     
     def check_edges(self):
@@ -56,7 +62,13 @@ class Alien(Sprite):
             return False
 
     def draw(self):
-        self.screen.blit(self.image, self.rect)
+        if self.shot_down:
+            self.current_image += 1
+        
+        if self.current_image >= len(self.images):
+            self.kill()
+        else:
+            self.screen.blit(self.images[self.current_image], self.rect)
 
     def update(self):
         """Update alien ship position on screen""" 
